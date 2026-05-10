@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useCart } from '../context/CartContext';
-import { BottleColor } from '../types';
+import { BottleColor, BottleSize } from '../types';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { generateBottleImage, hasApiKey, openApiKeyDialog } from '../services/geminiService';
@@ -18,12 +18,15 @@ interface ProductCardProps {
 
 const ProductCard = ({ color, aiImage, onGenerateAi, isGenerating, needsKey }: ProductCardProps) => {
   const { addToCart } = useCart();
+  const [selectedSize, setSelectedSize] = useState<BottleSize>('Standard');
   const displayImage = aiImage || color.img;
 
   const handleAddToCart = () => {
-    addToCart(color.name);
-    toast.success(`Added ${color.name} Pure Steel bottle to cart!`);
+    addToCart(color.name, selectedSize);
+    toast.success(`Added ${selectedSize} ${color.name} Pure Steel bottle to cart!`);
   };
+
+  const currentPrice = selectedSize === 'Large' ? 34.99 : 29.99;
 
   return (
     <motion.div 
@@ -69,13 +72,29 @@ const ProductCard = ({ color, aiImage, onGenerateAi, isGenerating, needsKey }: P
           <h3 className="text-xl font-bold text-neutral-900">Pure Steel Classic</h3>
           <p className="text-neutral-500 text-sm">{color.name}</p>
         </div>
-        <p className="font-bold text-neutral-900">$29.99</p>
+        <p className="font-bold text-neutral-900">${currentPrice}</p>
+      </div>
+
+      <div className="flex gap-2 mt-2 mb-4">
+        {(['Standard', 'Large'] as BottleSize[]).map((size) => (
+          <button
+            key={size}
+            onClick={() => setSelectedSize(size)}
+            className={`px-3 py-1 text-xs rounded-full border transition-all ${
+              selectedSize === size
+                ? 'bg-neutral-900 text-white border-neutral-900'
+                : 'bg-white text-neutral-500 border-neutral-200 hover:border-neutral-900'
+            }`}
+          >
+            {size}
+          </button>
+        ))}
       </div>
 
       <Button 
         onClick={handleAddToCart}
         variant="outline"
-        className="mt-4 w-full rounded-xl border-neutral-200 hover:border-neutral-900 hover:bg-neutral-900 hover:text-white transition-all"
+        className="w-full rounded-xl border-neutral-200 hover:border-neutral-900 hover:bg-neutral-900 hover:text-white transition-all"
       >
         Add to Cart
       </Button>

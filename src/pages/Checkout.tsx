@@ -98,9 +98,9 @@ export default function Checkout() {
             </CardHeader>
             <CardContent className="space-y-4">
               {cart.map((item) => (
-                <div key={`${item.id}-${item.color}`} className="flex justify-between text-sm">
+                <div key={`${item.id}-${item.color}-${item.size}`} className="flex justify-between text-sm">
                   <span className="text-neutral-600">
-                    Pure Steel Classic ({item.color}) x {item.quantity}
+                    Pure Steel Classic ({item.color}, {item.size}) x {item.quantity}
                   </span>
                   <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
                 </div>

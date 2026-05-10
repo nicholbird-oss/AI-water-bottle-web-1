@@ -1,4 +1,5 @@
 export type BottleColor = 'Silver' | 'Black' | 'Blue' | 'Red';
+export type BottleSize = 'Standard' | 'Large';
 
 export interface Product {
   id: string;
@@ -11,6 +12,7 @@ export interface Product {
 export interface CartItem {
   id: string;
   color: BottleColor;
+  size: BottleSize;
   quantity: number;
   price: number;
 }

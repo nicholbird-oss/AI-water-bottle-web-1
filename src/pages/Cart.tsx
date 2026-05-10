@@ -30,7 +30,7 @@ export default function Cart() {
         {cart.map((item) => {
           const colorInfo = BOTTLE_COLORS.find(c => c.name === item.color);
           return (
-            <div key={`${item.id}-${item.color}`} className="flex gap-6 items-center">
+            <div key={`${item.id}-${item.color}-${item.size}`} className="flex gap-6 items-center">
               <div className="w-24 h-24 bg-neutral-100 rounded-xl overflow-hidden flex-shrink-0">
                 <img
                   src={colorInfo?.img || `https://picsum.photos/seed/${item.color.toLowerCase()}-bottle/200/200?grayscale`}
@@ -42,14 +42,14 @@ export default function Cart() {
               
               <div className="flex-grow">
                 <h3 className="font-bold text-lg">Pure Steel Classic</h3>
-                <p className="text-neutral-500 text-sm mb-2">{item.color}</p>
+                <p className="text-neutral-500 text-sm mb-2">{item.color} • {item.size}</p>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center border border-neutral-200 rounded-lg">
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8"
-                      onClick={() => updateQuantity(item.id, item.color, item.quantity - 1)}
+                      onClick={() => updateQuantity(item.id, item.color, item.size, item.quantity - 1)}
                     >
                       <Minus className="h-3 w-3" />
                     </Button>
@@ -58,7 +58,7 @@ export default function Cart() {
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8"
-                      onClick={() => updateQuantity(item.id, item.color, item.quantity + 1)}
+                      onClick={() => updateQuantity(item.id, item.color, item.size, item.quantity + 1)}
                     >
                       <Plus className="h-3 w-3" />
                     </Button>
@@ -67,7 +67,7 @@ export default function Cart() {
                     variant="ghost"
                     size="icon"
                     className="text-neutral-400 hover:text-red-500"
-                    onClick={() => removeFromCart(item.id, item.color)}
+                    onClick={() => removeFromCart(item.id, item.color, item.size)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
