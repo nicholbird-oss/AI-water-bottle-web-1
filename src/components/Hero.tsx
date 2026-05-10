@@ -35,12 +35,22 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.2 }}
           className="max-w-4xl mx-auto"
         >
-          <img
-            src="https://lh3.googleusercontent.com/pw/AP1GczM8aYHPDmdBCRr-mpAvhd1RrIZFFM_i_Q7MXTJ94IavSZVDAH_um2d8yihBM9jrcJPaVT1X_X49REWz-t_3WwtfBpz9OrYD7vpq5qNRxnvDWibNLkRJ-t7JXL4mgOeta4BM8u3IBTUdGluv5sZHOsk=w1408-h768-s-no?authuser=3"
-            alt="Pure Steel Bottle"
-            className="w-full h-auto rounded-2xl shadow-2xl"
-            referrerPolicy="no-referrer"
-          />
+          <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-2xl bg-neutral-100">
+            <video
+              className="w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster="https://lh3.googleusercontent.com/pw/AP1GczM8aYHPDmdBCRr-mpAvhd1RrIZFFM_i_Q7MXTJ94IavSZVDAH_um2d8yihBM9jrcJPaVT1X_X49REWz-t_3WwtfBpz9OrYD7vpq5qNRxnvDWibNLkRJ-t7JXL4mgOeta4BM8u3IBTUdGluv5sZHOsk=w1408-h768-s-no?authuser=3"
+            >
+              <source src="/input_file_0.mp4" type="video/mp4" />
+              <source 
+                src="https://photos.google.com/share/AF1QipNu_x96E_qSSOka47RdrEhfgUFBbfWrWDenWZ816n2ErIGtgO0tIoxuKYuF10Y-Wg/photo/AF1QipOjUlvcJBG1QILMEtltfAys8YHw43KmmNobKKZg?key=aFJSRF9ldnZ3VXY3b1ZzZVczbGhVOS01eVdNNU1R" 
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
         </motion.div>
       </div>
     </section>
