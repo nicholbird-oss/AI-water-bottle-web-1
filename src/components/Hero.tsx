@@ -36,20 +36,13 @@ export default function Hero() {
           className="max-w-4xl mx-auto"
         >
           <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-2xl bg-neutral-100">
-            <video
-              className="w-full h-full object-cover"
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster="https://lh3.googleusercontent.com/pw/AP1GczM8aYHPDmdBCRr-mpAvhd1RrIZFFM_i_Q7MXTJ94IavSZVDAH_um2d8yihBM9jrcJPaVT1X_X49REWz-t_3WwtfBpz9OrYD7vpq5qNRxnvDWibNLkRJ-t7JXL4mgOeta4BM8u3IBTUdGluv5sZHOsk=w1408-h768-s-no?authuser=3"
-            >
-              <source src="/input_file_0.mp4" type="video/mp4" />
-              <source 
-                src="https://photos.google.com/share/AF1QipNu_x96E_qSSOka47RdrEhfgUFBbfWrWDenWZ816n2ErIGtgO0tIoxuKYuF10Y-Wg/photo/AF1QipOjUlvcJBG1QILMEtltfAys8YHw43KmmNobKKZg?key=aFJSRF9ldnZ3VXY3b1ZzZVczbGhVOS01eVdNNU1R" 
-              />
-              Your browser does not support the video tag.
-            </video>
+            <iframe
+              src="https://www.youtube.com/embed/D84KFeAfZM8?autoplay=1&mute=1&loop=1&playlist=D84KFeAfZM8&controls=0&rel=0&modestbranding=1"
+              title="Pure Steel Bottle"
+              className="absolute top-0 left-0 w-full h-full border-0 pointer-events-none"
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+            ></iframe>
           </div>
         </motion.div>
       </div>
