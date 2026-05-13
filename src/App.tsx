@@ -5,6 +5,7 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
+import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
@@ -13,8 +14,9 @@ import { Toaster } from '@/components/ui/sonner';
 
 export default function App() {
   return (
-    <CartProvider>
-      <Router>
+    <AuthProvider>
+      <CartProvider>
+        <Router>
         <div className="min-h-screen bg-white font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
           <Navbar />
           <Routes>
@@ -26,6 +28,7 @@ export default function App() {
         </div>
       </Router>
     </CartProvider>
-  );
+  </AuthProvider>
+);
 }
 

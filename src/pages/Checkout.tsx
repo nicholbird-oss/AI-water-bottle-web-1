@@ -1,17 +1,51 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
+import AuthForm from '../components/AuthForm';
 
 export default function Checkout() {
   const { cart, totalPrice, clearCart } = useCart();
+  const { user, userProfile } = useAuth();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    address: ''
+  });
+
+  useEffect(() => {
+    if (userProfile) {
+      setFormData({
+        firstName: userProfile.firstName || '',
+        lastName: userProfile.lastName || '',
+        email: userProfile.email || user?.email || '',
+        phone: userProfile.phone || '',
+        address: userProfile.address || ''
+      });
+    } else if (user) {
+      setFormData(prev => ({
+        ...prev,
+        email: user.email || ''
+      }));
+    }
+  }, [user, userProfile]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,32 +70,91 @@ export default function Checkout() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div>
           <h1 className="text-4xl font-bold tracking-tighter mb-8">Checkout</h1>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="firstName">First Name</Label>
-                <Input id="firstName" required placeholder="John" />
+          
+          {!user && !showAuth && (
+            <div className="mb-8 p-6 bg-neutral-50 rounded-2xl border border-neutral-100">
+              <h3 className="font-bold mb-2">Already have an account?</h3>
+              <p className="text-sm text-neutral-500 mb-4">Sign in to speed up your checkout process.</p>
+              <Button 
+                variant="outline" 
+                onClick={() => setShowAuth(true)}
+                className="border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white"
+              >
+                Sign In or Create Account
+              </Button>
+            </div>
+          )}
+
+          {showAuth && !user ? (
+            <div className="mb-8">
+              <AuthForm onSuccess={() => setShowAuth(false)} />
+              <Button 
+                variant="ghost" 
+                onClick={() => setShowAuth(false)}
+                className="mt-4 w-full text-neutral-500 hover:text-neutral-900"
+              >
+                Continue as Guest
+              </Button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input 
+                    id="firstName" 
+                    required 
+                    placeholder="John" 
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input 
+                    id="lastName" 
+                    required 
+                    placeholder="Doe" 
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                  />
+                </div>
               </div>
+              
               <div className="space-y-2">
-                <Label htmlFor="lastName">Last Name</Label>
-                <Input id="lastName" required placeholder="Doe" />
+                <Label htmlFor="email">Email Address</Label>
+                <Input 
+                  id="email" 
+                  type="email" 
+                  required 
+                  placeholder="john@example.com" 
+                  value={formData.email}
+                  onChange={handleInputChange}
+                />
               </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input id="email" type="email" required placeholder="john@example.com" />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input id="phone" type="tel" required placeholder="+1 (555) 000-0000" />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="address">Shipping Address</Label>
-              <Input id="address" required placeholder="123 Steel St, Minimal City, 12345" />
-            </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input 
+                  id="phone" 
+                  type="tel" 
+                  required 
+                  placeholder="+1 (555) 000-0000" 
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="address">Shipping Address</Label>
+                <Input 
+                  id="address" 
+                  required 
+                  placeholder="123 Steel St, Minimal City, 12345" 
+                  value={formData.address}
+                  onChange={handleInputChange}
+                />
+              </div>
 
             <div className="pt-6">
               <h3 className="text-xl font-bold mb-4">Payment Method</h3>
@@ -81,14 +174,15 @@ export default function Checkout() {
               </p>
             </div>
 
-            <Button 
-              type="submit" 
-              disabled={isProcessing}
-              className="w-full py-8 text-lg rounded-2xl bg-neutral-900 hover:bg-neutral-800 text-white mt-8"
-            >
-              {isProcessing ? "Processing..." : `Pay $${totalPrice.toFixed(2)} with PayPal`}
-            </Button>
-          </form>
+              <Button 
+                type="submit" 
+                disabled={isProcessing}
+                className="w-full py-8 text-lg rounded-2xl bg-neutral-900 hover:bg-neutral-800 text-white mt-8"
+              >
+                {isProcessing ? "Processing..." : `Pay $${totalPrice.toFixed(2)} with PayPal`}
+              </Button>
+            </form>
+          )}
         </div>
 
         <div className="lg:pt-16">
